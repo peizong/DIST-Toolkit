@@ -113,7 +113,7 @@ class gen_disl():
       disl_centers=np.array([[0.25,0.25],[0.25,0.75],[0.75,0.25],[0.75,0.75]])
     elif self.num_disl==2: 
       sign=np.array([1,-1])
-      disl_centers=np.array([[self.x0,self.x0],
+      disl_centers=np.array([[self.x0+1.0/self.mag_coord[0][0]*0.21213*5,self.x0+1.0/self.mag_coord[1][1]*0.12247*5],
                              [1-self.x0,1-self.x0]])
     elif self.num_disl==1: 
       sign=np.array([1])

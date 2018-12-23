@@ -1,5 +1,18 @@
 #!/usr/bin/python
 
+############################################################################### 
+#                                                                          * F# 
+#               DIST: A DIslocation-Simulation Toolkit                     2 R# 
+# GNU License - Author: Zongrui Pei                       2015-06-10       0 A# 
+# Version 1.0                                                              1 N# 
+#                                                                          5 K# 
+# Syntax:                                                                  0 F# 
+# Please find the syntx in the howto.dat of the examples folder            6 U# 
+# and the CPC paper: Zongrui Pei, DIST: A DIslocation-Simulation Toolkit,  1 R# 
+# Computer Physics Communications 233(2018)44-50.                          0 T# 
+#                                                                          * *# 
+###############################################################################
+
 #----------------Description of its function--------
 # This code can create a supercell with a designated plane {hkl}(e.g. {1,1,1}) for
 # any crystal structure.

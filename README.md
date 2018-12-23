@@ -1,7 +1,7 @@
 # DIST
 Generate atomic structures for common defects in materials
 
-One of the very powerful aspect is the colorful examples. Before you start to use the toolkit, please first check if the examples include the structures that you want. For examples, we already have:
+One of the very powerful aspects is the colorful examples. Before you start to use the toolkit, please first check if the examples include the structures that you want. For examples, we already have:
 (1) the {111}<11-2>/6 edge dislocation for fcc;
 (2) the <111> screw dislocation for bcc;
 (3) the magic angle bilayer graphene (1.1);

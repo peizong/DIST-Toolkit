@@ -15,6 +15,7 @@ If you find this toolkit is helpful to you, please kindly cite the following pap
 Zongrui Pei, DIST: A dislocation-simulation toolkit, Computer Physics Communications 233(2018)44-50.
 
 ---------------bibtex----------------------------
+
 @article{PEI201844,
 title = "DIST: A dislocation-simulation toolkit",
 journal = "Computer Physics Communications",

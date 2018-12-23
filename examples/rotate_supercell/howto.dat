@@ -1,0 +1,8 @@
+prepare the rotation matrix and the initial supercell, run
+----------------------------
+../../coordinate-rotation.py before.dat rotate_90_001 > after.dat
+----------------------------
+the rotation matrix rotates the supercell along [001] by pi/2.
+The rotation matrix should be a unit matrix that does not change
+the length of the primitive vector and their relative directions
+but only rigidly rotates all the atomic position as a whole.

@@ -1,0 +1,9 @@
+prepare tilt supercell bcc_tilt and the orthogonal coordinate, run 
+-------------------
+../../coordinate-orthogonalize.py bcc_tilt new_coord > bcc_orth
+-------------------
+the number 0 - use direct coordinate for output
+           1 - use cartesian coodinate for output
+if there is no number 0 or 1, the defaut coodinate is cartesian.
+The tilt supercell usually needs to be magnified to make sure it's able to
+be orthogonized.

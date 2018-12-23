@@ -1,0 +1,7 @@
+adjust the first line and then run
+---------------
+../../magnifyCell_changeCoord.py bcc_unit
+---------------
+the first number 0-use direct coordinate for output;
+                 1-use cartesian coordinate for output;
+the 2nd-4th number are the magnification factors along the three direction.

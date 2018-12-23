@@ -1,0 +1,4 @@
+#magnify the supercell in order to make an orthorgonal supercell (make sure the components of vectors are multiple times of the other)
+../../magnifyCell_changeCoord.py bcc_unit > bcc_super
+cp bcc_super > coord_orth
+../../coordinate-orthogonalize.py bcc_super coord_orth > bcc_super_orth

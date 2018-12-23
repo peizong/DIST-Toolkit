@@ -1,0 +1,7 @@
+prepare the input file with all requirements, run
+------------------------------------------------
+../../../gen_hkl_unitCell.py in.gen-hkl-unit-cell.bcc
+------------------------------------------------
+In this specific example, the code will generate a cell
+with its 3rd primitive vector parallel to the [111] direction.
+This can be used as a basis to generate a [111] screw dislocation.

@@ -1,0 +1,7 @@
+prepare input structure file and the exchange coordinate new_coord, run
+-------------------------
+../../coordinate-transformation.py before.dat new_coord > after.dat
+-------------------------
+In after.dat, the structure use new_coord as the coordinate. When making a screw
+dislocation, we often need to put the direction of Burgers vector as the 3rd
+primitive vector.

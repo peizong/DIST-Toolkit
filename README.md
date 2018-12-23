@@ -11,6 +11,8 @@ If you cannot find the structures that meets your requirements, you can follow t
 
 This is the first part of the DIST toolkit. The second part is about multi-scale modeling of dislocations and strains. This part will be online soon.
 
+Please write me if you have problems with the toolkit. The email address can be found from the DIST paper below.
+
 If you find this toolkit is helpful to you, please kindly cite the following paper:
 Zongrui Pei, DIST: A dislocation-simulation toolkit, Computer Physics Communications 233(2018)44-50.
 

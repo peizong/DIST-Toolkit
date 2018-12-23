@@ -1,19 +1,6 @@
 # DIST
 Generate atomic structures for common defects in materials
 
-############################################################################### 
-#                                                                          * F# 
-#               DIST: A DIslocation-Simulation Toolkit                     2 R# 
-# GNU License - Author: Zongrui Pei                       2015-06-10       0 A# 
-# Version 1.0                                                              1 N# 
-#                                                                          5 K# 
-# Syntax:                                                                  0 F# 
-# Please find the syntx in the howto.dat of the examples folder            6 U# 
-# and the CPC paper: Zongrui Pei, DIST: A DIslocation-Simulation Toolkit,  1 R# 
-# Computer Physics Communications 233(2018)44-50.                          0 T# 
-#                                                                          * *# 
-###############################################################################
-
 One of the very powerful aspect is the colorful examples. Before you start to use the toolkit, please first check if the examples include the structures that you want. For examples, we already have:
 (1) the {111}<11-2>/6 edge dislocation for fcc;
 (2) the <111> screw dislocation for bcc;

@@ -145,7 +145,7 @@ def FNewPrimitiveVectors(hkl,BravLatt,CryStru):
     secShortAtomDis = 1
     if FTrunc(CryStru) == 1:
         shortAtomDis = shortAtomDis
-    elif CryStru == 2 or CryStru == 4:
+    elif FTrunc(CryStru) == 2 or FTrunc(CryStru) == 4:
         secShortAtomDis=0.5*2**0.5
     elif FTrunc(CryStru) == 3:
         secShortAtomDis=0.5*3**0.5
@@ -224,7 +224,9 @@ def FNewPrimitiveVectors(hkl,BravLatt,CryStru):
     if FRound(FVecLength(b)/secShortAtomDis,1)==2.0:
         b = b/2.0
     if FVecLength(a) > FVecLength(b):
-        medium, a, b = a, b, medium
+        medium=a
+        a=b
+        b=medium
     aAb = FVecAdd(a,b)
     aMb = FVecMinus(a,b)
     if (FRound(FVecLength(aAb)/shortAtomDis,1)==2.0) or \
@@ -292,8 +294,8 @@ def FBravLattUnit(CryStru):
   # 1-primitive, 1.1-hexagonal, 2-side-centered,3-body-centered, 4-face-centered,
   # 1.1-hexagonal,1.2-Monoclinic,1.3-Rhombic,1.4-Tetragonal,1.5-Trigonal(Rhombohedral),
     1.6-Triclinic,1.7-Cubic(simple lattice)
-  # 2.1-Rhombic,2.2-Tetragonal,2.3-Cubic(bcc)
-  # 3.1-Rhombic,3.2-Cubic(fcc)
+  # 2.1-Rhombic,2.2-Tetragonal,2.3-Cubic(fcc)
+  # 3.1-Rhombic,3.2-Cubic(bcc)
   # 4.1-Monoclinic 4.2-Rhombic
   """
   if CryStru == 1.1:

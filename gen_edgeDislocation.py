@@ -14,7 +14,7 @@
 ###############################################################################
 
 import numpy as np
-from numpy import pi,arctan,arctan2,log
+from numpy import sign, pi,arctan,arctan2,log
 import sys
 
 class gen_disl():
@@ -23,7 +23,9 @@ class gen_disl():
     self.filename=filename
     self.latt_para=1.0
     self.b=1.0
-    self.sys_name="" 
+    self.w=0.1
+    self.sys_name=""
+    self.disl_along_axis=1 
     self.coord_type="" #"Direct" #"Cartesian"
     self.coord=np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]) 
     self.atoms_pos=[] 
@@ -41,10 +43,11 @@ class gen_disl():
       for line in in_file:
         ll=line.split()
         if count==1: 
-          if len(ll)==5:
-            self.sys_name,self.b,self.N=ll[0],float(ll[1]),[int(ll[2]),int(ll[3]),int(ll[4])]
-          if len(ll)==3:
-            self.sys_name,self.b,self.num_disl=ll[0],float(ll[1]),int(ll[2])
+          if len(ll)==6:
+            self.sys_name,self.b,self.disl_along_axis,self.N=ll[0],float(ll[1]),int(ll[2]),[int(ll[3]),int(ll[4]),int(ll[5])]
+          if len(ll)==4:
+            self.sys_name,self.b,self.disl_along_axis,self.num_disl=ll[0],float(ll[1]),int(ll[2]),int(ll[3])
+          self.w=self.w*self.b 
         if count==2: self.latt_para,self.b=float(ll[0]),self.b*float(ll[0])
         if count>2 and count<6:
           self.coord[count-3]=np.array([float(ll[0]),float(ll[1]),float(ll[2])])
@@ -98,15 +101,63 @@ class gen_disl():
   def is_in_void_box(self,x,y):
     x,y=x-self.disl_center[0],y-self.disl_center[1]
     if self.num_disl==1:                           
-      if (y>=0 and (x+self.b/2.0)*(x-self.b/2.0)<=0): 
-        return True
+      if self.disl_along_axis==1:
+        if (y>=0 and (x>-self.b/2.0) and (x<=self.b/2.0)): 
+          return True
+        else: return False
+      elif self.disl_along_axis==2:
+        if (x>=0 and (y>-self.b/2.0) and (y<=self.b/2.0)): 
+          return True
+        else: return False
       else: return False
-    elif self.num_disl==2:                             
-      if ((y+self.disl_center[1]/2.0)*(y-self.disl_center[1]/2.0)<=0 and (x+self.b/2.0)*(x-self.b/2.0)<=0): 
-        return True
+    elif self.num_disl==2:
+      if self.disl_along_axis==1:
+        if ((y>-self.disl_center[1]/2.0) and (y<=self.disl_center[1]/2.0) and (x>-self.b/2.0) and (x<=self.b/2.0)): 
+          return True
+        else: return False
+      elif self.disl_along_axis==2:                              
+        if ((x>-self.disl_center[0]/2.0) and (x<=self.disl_center[0]/2.0) and (y>-self.b/2.0) and (y<=self.b/2.0)): 
+          return True
+        else: return False
       else: return False
     else: print("Not support dislocations more than two!")
+      
+  def UxUy(self,x,y):
+    #nu=0.3
+    #e=1e-8 #avoid 1/0 error
+    ux,uy=0.0,0.0
+    x,y=x-self.disl_center[0],y-self.disl_center[1]
+    if self.num_disl==1:
+      if self.disl_along_axis==1:
+        uy=0.0
+        if (y>0):
+          ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+self.b/2 #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
+        else: ux=0.0
+      elif self.disl_along_axis==2:
+        ux=0.0
+        if (x>0):
+          uy=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
+        else: uy=0.0
+      else: ux,uy=0.0,0.0
+    elif self.num_disl==2:
+      if self.disl_along_axis==1:
+        uy=0.0
+        if ((y>-self.disl_center[1]/2.0) and (y<=self.disl_center[1]/2.0)): #(y<=self.disl_center[1]*0.5 or y>=-self.disl_center[1]*0.5):
+          ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+(self.b/pi*arctan(x/self.b/0.5)+self.b/2.0)
+        else: ux=0.0
+      elif self.disl_along_axis==2:
+        ux=0.0
+        if ((x>-self.disl_center[0]/2.0) and (x<=self.disl_center[0]/2.0)):
+          uy=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
+      else: ux,uy=0.0,0.0  
+    else: 
+      ux,uy=0.0,0.0
+      print "Please supply correct number of dislocation!"
+    #uz=0 #-self.b/(2*pi)*((1-2*nu)/4/(1-nu)*log(x**2+y**2+e)+(x**2-y**2)/(4*(1-nu))/(x**2+y**2+e))
+    return [ux,uy] #self.b/(2*pi)*self.angle(x-self.disl_center[0],y-self.disl_center[1])
+
   def make_dislocation(self):
+    # remove atoms and make a void box
     list_to_be_deleted=[]
     for i in range(0,len(self.atoms_pos)):
       if self.is_in_void_box(self.atoms_pos[i][0],self.atoms_pos[i][1]):
@@ -114,24 +165,12 @@ class gen_disl():
     list_to_be_deleted.sort(reverse=True)
     for i in list_to_be_deleted:
       self.atoms_pos.pop(i)
-  def UxUy(self,x,y):
-    #nu=0.3
-    #e=1e-8 #avoid 1/0 error
-    ux,uz=0,0
-    x,y=x-self.disl_center[0],y-self.disl_center[1]
-    if self.num_disl==1:
-      if (y>0 and x>=0):
-        ux=self.b #self.b/pi*arctan(x/self.b)+self.b/2 #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
-      else: ux=0
-    elif self.num_disl==2:
-      if (y>self.disl_center[1]*0.5 or y<=-self.disl_center[1]*0.5) and (x>=0):
-        ux=self.b
-      else: ux=0
-    else: 
-      ux=0
-      print "Please supply correct number of dislocation!"
-    uz=0 #-self.b/(2*pi)*((1-2*nu)/4/(1-nu)*log(x**2+y**2+e)+(x**2-y**2)/(4*(1-nu))/(x**2+y**2+e))
-    return [ux,uz] #self.b/(2*pi)*self.angle(x-self.disl_center[0],y-self.disl_center[1])
+    # displace atoms to remove the void box
+    for i in range(0,len(self.atoms_pos)):                                                                   
+      uxy=self.UxUy(self.atoms_pos[i][0], self.atoms_pos[i][1])
+      self.atoms_pos[i][0] +=uxy[0]
+      self.atoms_pos[i][1] +=uxy[1]
+
   def displace_atoms(self):
     #self.magnify_cell()
     #self.read_data()

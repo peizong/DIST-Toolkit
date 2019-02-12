@@ -28,7 +28,7 @@ class gen_disl():
     self.coord_type="" #"Direct" #"Cartesian"
     self.coord=np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]) 
     self.atoms_pos=[] 
-    self.N=[10,10,1] #default, will read from structural file
+    self.N=[1,1,1] #default, will read from structural file
     self.n_unit=[]
     self.GSFE_requirements=[]
   def read_data(self):
@@ -59,7 +59,7 @@ class gen_disl():
       count=1
       for line in in_file2:
         ll=line.split(":")
-        if (count>1 and count <6):
+        if (count>2 and count <7):
           lll=ll[1].split(",")
           for i in range(0,len(lll)):
             lll[i]=float(lll[i])
@@ -71,14 +71,29 @@ class gen_disl():
     new_coord=[]
     new_coord.append(self.coord[0])
     new_coord.append(self.coord[1])
-    stepX=np.asarray(self.GSFE_requirements[1])*float(self.GSFE_requirements[3][0])/(int(self.GSFE_requirements[4][0])-1)
-    stepY=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[3][1])/(int(self.GSFE_requirements[4][1])-1)
+    stepX=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
+    stepY=np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
     X=i*stepX[0]+j*stepY[0]+self.coord[2][0]
     Y=i*stepX[1]+j*stepY[1]+self.coord[2][1]
     Z=i*stepX[2]+j*stepY[2]+self.coord[2][2]
     new_coord.append([X,Y,Z])
     return new_coord
-  def write_file(self,new_coord,wfile):
+  def new_atom_pos(self,i,j):
+    new_atom_pos=[]
+    pos_cut=0.499
+    for k in range(0,len(self.atoms_pos)):
+      if self.atoms_pos[k][2]<self.coord[2][2]*pos_cut:
+        new_atom_pos.append(self.atoms_pos[k])
+      else:
+        new_pos=[]
+        stepX=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
+        stepY=np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
+        X=i*stepX[0]+j*stepY[0]+self.atoms_pos[k][0]  
+        Y=i*stepX[1]+j*stepY[1]+self.atoms_pos[k][1]  
+        Z=i*stepX[2]+j*stepY[2]+self.atoms_pos[k][2]  
+        new_atom_pos.append([X,Y,Z])
+    return new_atom_pos
+  def write_file(self,new_coord,new_atoms_pos,wfile):
     wfile.write(self.sys_name+'\n')
     wfile.write(str(self.latt_para)+'\n') #self.latt_para
     for i in range(0,3):
@@ -88,16 +103,16 @@ class gen_disl():
       wfile.write(str(i)+" "),
     if self.w_coord == 1:
       wfile.write("\nCartesian\n") #self.coord_type
-      for i in self.atoms_pos:
-          if self.GSFE_requirements[5] == 0:
+      for i in new_atoms_pos:
+          if self.GSFE_requirements[6] == 0:
             wfile.write(str(format(i[0],"03f"))+"	"+str(format(i[1], "03f"))+"	"+str(format(i[2],"03f"))+'\n')
-          elif self.GSFE_requirements[5] == 1:
+          elif self.GSFE_requirements[6] == 1:
             wfile.write(str(format(i[0],"03f"))+"	"+str(format(i[1], "03f"))+"	"+str(format(i[2],"03f"))+" F F T"+'\n')
           else: print("Wrong label! Please only put number 0 or 1!")
     elif self.w_coord == 0:
       wfile.write("\nDirect\n") #self.coord_type
-      for i in self.atoms_pos:
-          i=np.dot(np.linalg.inv(self.mag_coord.transpose()),i)
+      for i in new_atoms_pos:
+          i=np.dot(np.linalg.inv(self.coord.transpose()),i)
           if self.GSFE_requirements[5] == 0:               
             wfile.write(str(format(i[0],"03f"))+"	"+str(format(i[1], "03f"))+"	"+str(format(i[2],"03f"))+'\n') 
           elif self.GSFE_requirements[5] == 1:             
@@ -105,17 +120,30 @@ class gen_disl():
           else: print("Wrong label! Please only put number 0 or 1!")
   def print_disl(self):
     self.read_data()
-    for i in range(0,int(self.GSFE_requirements[4][0])):
+    for i in range(0,int(self.GSFE_requirements[5][0])):
       if int(self.GSFE_requirements[0]) == 1:
-        new_coord=self.new_coord(i,0)
-        with open("POSCAR"+str(i),'w') as wfile:
-          self.write_file(new_coord,wfile)
+        if int(self.GSFE_requirements[1]) == 1:
+          new_coord=self.new_coord(i,0)
+          with open("POSCAR"+str(i),'w') as wfile:
+            self.write_file(new_coord,self.atoms_pos,wfile)
+        elif int(self.GSFE_requirements[1]) == 2:
+          for j in range(0,int(self.GSFE_requirements[5][1])):   
+            new_coord=self.new_coord(i,j)           
+            with open("POSCAR_"+str(i)+"_"+str(j),'w') as wfile:
+              self.write_file(new_coord,self.atoms_pos,wfile)
+        else: print("Please put a right number for the dimensionality!")
       elif int(self.GSFE_requirements[0]) == 2:
-        for j in range(0,int(self.GSFE_requirements[4][1])):   
-          new_coord=self.new_coord(i,j)           
-          with open("POSCAR_"+str(i)+"_"+str(j),'w') as wfile:
-            self.write_file(new_coord,wfile)
-      else: print("Please put a right number for the dimensionality!")
+        if int(self.GSFE_requirements[1]) == 1:
+          new_atom_pos=self.new_atom_pos(i,0)
+          with open("POSCAR"+str(i),'w') as wfile:
+            self.write_file(self.coord,new_atom_pos,wfile)
+        elif int(self.GSFE_requirements[1]) == 2:
+          for j in range(0,int(self.GSFE_requirements[5][1])):   
+            new_atom_pos=self.new_atom_pos(i,j)           
+            with open("POSCAR_"+str(i)+"_"+str(j),'w') as wfile:
+              self.write_file(self.coord,new_atom_pos,wfile)
+        else: print("Please put a right number for the dimensionality!")
+      else: print("Please pick 1 or 2 for the number of GSFs!")
 disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
 #disl1.read_data()
 disl1.print_disl()

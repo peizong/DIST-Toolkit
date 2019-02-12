@@ -27,7 +27,7 @@ class gen_disl():
     self.coord_type="" #"Direct" #"Cartesian"
     self.coord=np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]) 
     self.atoms_pos=[] 
-    self.N=[10,10,1] #default, will read from structural file
+    self.N=[1,1,1] #default, will read from structural file
     self.n_unit=[]
     self.mag_coord=np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
     self.mag_atoms_pos=[] 
@@ -36,7 +36,15 @@ class gen_disl():
       count=1
       for line in in_file:
         ll=line.split()
-        if count==1: self.sys_name,self.w_coord,self.N=ll[0],int(ll[1]),[int(ll[2]),int(ll[3]),int(ll[4])]
+        if count==1: 
+          if len(ll)==5:
+            self.sys_name,self.w_coord,self.N=ll[0],int(ll[1]),[int(ll[2]),int(ll[3]),int(ll[4])]
+          elif len(ll)==4:
+            self.sys_name,self.N=ll[0],[int(ll[1]),int(ll[2]),int(ll[3])]
+          elif len(ll)==2:
+            self.sys_name,self.w_coord=ll[0],int(ll[1])
+          else:
+            self.sys_name=ll
         if count==2: self.latt_para=float(ll[0])
         if count>2 and count<6:
           self.coord[count-3]=np.array([float(ll[0]),float(ll[1]),float(ll[2])])

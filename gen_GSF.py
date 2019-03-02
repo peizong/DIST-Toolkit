@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/nfs/apps/Compilers/Python/Anaconda/2.7/bin/python
+##!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -86,8 +87,8 @@ class gen_disl():
         new_atom_pos.append(self.atoms_pos[k])
       else:
         new_pos=[]
-        stepX=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
-        stepY=np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
+        stepX=1.0*np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
+        stepY=1.0*np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
         X=i*stepX[0]+j*stepY[0]+self.atoms_pos[k][0]  
         Y=i*stepX[1]+j*stepY[1]+self.atoms_pos[k][1]  
         Z=i*stepX[2]+j*stepY[2]+self.atoms_pos[k][2]  
@@ -134,7 +135,7 @@ class gen_disl():
         else: print("Please put a right number for the dimensionality!")
       elif int(self.GSFE_requirements[0]) == 2:
         if int(self.GSFE_requirements[1]) == 1:
-          new_atom_pos=self.new_atom_pos(i,0)
+          new_atom_pos=self.new_atom_pos(i,i)
           with open("POSCAR"+str(i),'w') as wfile:
             self.write_file(self.coord,new_atom_pos,wfile)
         elif int(self.GSFE_requirements[1]) == 2:

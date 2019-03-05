@@ -102,6 +102,8 @@ class gen_disl():
             str(format(new_coord[i][2],"03f"))+'\n')
     for i in np.asarray(self.n_unit):
       wfile.write(str(i)+" "),
+    if int(self.GSFE_requirements[8])==1:
+      wfile.write("\nSelective dynamics")
     if self.w_coord == 1:
       wfile.write("\nCartesian\n") #self.coord_type
       for i in new_atoms_pos:
@@ -134,6 +136,7 @@ class gen_disl():
               self.write_file(new_coord,self.atoms_pos,wfile)
         else: print("Please put a right number for the dimensionality!")
       elif int(self.GSFE_requirements[0]) == 2:
+        self.coord[2][2] += float(self.GSFE_requirements[7])
         if int(self.GSFE_requirements[1]) == 1:
           new_atom_pos=self.new_atom_pos(i,i)
           with open("POSCAR"+str(i),'w') as wfile:

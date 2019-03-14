@@ -95,8 +95,10 @@ class fit_gammaSurface():
     plt.show()
   def cal_shear_modulus(self,direction):
     c1,c2=self.triGeomFuns6[1],self.triGeomFuns6[2]
-    a=3.52e-10
-    b,d=0.5**0.5*a,(2.0/3)**0.5*a
+    a=3.52e-10 # fcc
+    # a=a*2**0.5 #hcp
+    b=0.5**0.5*a
+    d=(2.0/3)**0.5*b
     pseudoG=-8*pi**2*(c1+c2)*d/b**2
     return pseudoG/1e9
   def post_processing(self):

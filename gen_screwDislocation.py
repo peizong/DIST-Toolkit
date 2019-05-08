@@ -102,10 +102,19 @@ class gen_disl():
   def cal_disl_pattern(self):
     L0=np.array([self.mag_coord[0][0],self.mag_coord[0][1]])
     L1=np.array([self.mag_coord[1][0],self.mag_coord[1][1]])
-    self.x0=0.5*(np.dot(L0,L0)+np.dot(L0,L1))/\
-            (np.dot(L0,L0)+np.dot(L1,L1)+4*np.dot(L0,L1))
+    #self.x0=0.5*(np.dot(L0,L0)+np.dot(L0,L1))/\
+    #        (np.dot(L0,L0)+np.dot(L1,L1)+4*np.dot(L0,L1))
+    # for Left bottom right up
+    self.x0=0.5*(np.dot(L0,L1)+np.dot(L1,L1))/\
+            (np.dot(L0,L0)+np.dot(L1,L1)+2*np.dot(L0,L1))
     L2,L3=L0,(1-2*self.x0)*(L0+L1)
     self.theta0=arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
+    #self.theta0=np.pi-arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
+    # for Left Up right bottom
+    #self.x0=0.5*(np.dot(L1,L1)-np.dot(L0,L1))/\
+    #        (np.dot(L0,L0)+np.dot(L1,L1)-2*np.dot(L0,L1))
+    #L2,L3=L0,-(1-self.x0)*(L0-L1)
+    #self.theta0=arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
   def angle(self,x,y):
      if x==0:
        if y>=0: return pi/2.0
@@ -126,20 +135,23 @@ class gen_disl():
       disl_centers=np.array([[0.25,0.25],[0.25,0.75],[0.75,0.25],[0.75,0.75]])
     elif self.num_disl==2: 
       sign=np.array([1,-1])
-      disl_centers=np.array([[self.x0+1.0/self.mag_coord[0][0]*0.21213*5,self.x0+1.0/self.mag_coord[1][1]*0.12247*5],
-                             [1-self.x0,1-self.x0]])
+      #disl_centers=np.array([[self.x0+1.0/self.mag_coord[0][0]*0.21213*5,self.x0+1.0/self.mag_coord[1][1]*0.12247*5],[1-self.x0,1-self.x0]])
+      disl_centers=np.array([[self.x0,self.x0],[1-self.x0,1-self.x0]])
+      #disl_centers=np.array([[self.x0,1-self.x0],[1-self.x0,self.x0]])
     elif self.num_disl==1: 
       sign=np.array([1])
       disl_centers=np.array([[0.0,0.0]])
     else: return None
     disl_centers=disl_centers*np.array([self.mag_coord[0][0],self.mag_coord[1][1]])
+# tobedeleted
+#    disl_centers=np.array([[4.24,4.5],[12.37,13.0]])
     for i in range(0,self.num_disl):
       #shift_z +=self.b/(2*pi)*sign[i]*self.adjust_angle(x-disl_centers[i,0],y-disl_centers[i,1],theta0)
     #return self.b/(2*pi)*self.adjust_angle(x-self.disl_center[0],y-self.disl_center[1],0/2.0)
-      for jx in range(0,10):
-        dc_x=(jx-5)*self.mag_coord[0][0]+disl_centers[i,0]
-        for jy in range(0,10):
-          dc_y=(jy-5)*self.mag_coord[1][1]+disl_centers[i,1]
+      for jx in range(0,80):
+        dc_x=(jx-40)*self.mag_coord[0][0]+disl_centers[i,0]
+        for jy in range(0,80):
+          dc_y=(jy-40)*self.mag_coord[1][1]+disl_centers[i,1]
           shift_z +=self.b/(2*pi)*sign[i]*self.adjust_angle(x-dc_x,y-dc_y,theta0)
     return shift_z
 # to be deleted

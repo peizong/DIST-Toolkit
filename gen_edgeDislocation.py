@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/nfs/apps/Compilers/Python/Anaconda/2.7/bin/python
+
+##!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -23,7 +25,7 @@ class gen_disl():
     self.filename=filename
     self.latt_para=1.0
     self.b=1.0
-    self.w=0.1
+    self.w=1.0 #0.1
     self.sys_name=""
     self.disl_along_axis=1 
     self.coord_type="" #"Direct" #"Cartesian"
@@ -102,7 +104,8 @@ class gen_disl():
     x,y=x-self.disl_center[0],y-self.disl_center[1]
     if self.num_disl==1:                           
       if self.disl_along_axis==1:
-        if (y>=0 and (x>-self.b/2.0) and (x<=self.b/2.0)): 
+        #if (y>=0 and (x>-self.b/2.0) and (x<=self.b/2.0)): # "=" is added to the 2nd,3rd condition
+        if (y>=0 and (x>0.0) and (x<=self.b)):
           return True
         else: return False
       elif self.disl_along_axis==2:
@@ -131,7 +134,11 @@ class gen_disl():
       if self.disl_along_axis==1:
         uy=0.0
         if (y>0):
-          ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+self.b/2 #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
+          if x>0:
+            ux=self.b/(pi)*arctan(-(x-self.b)/self.w)+self.b/2.0
+            ux=-ux
+          else: ux=self.b/(pi)*arctan(x/self.w)+self.b/2.0
+          #ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+self.b/2 #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
         else: ux=0.0
       elif self.disl_along_axis==2:
         ux=0.0
@@ -168,7 +175,7 @@ class gen_disl():
     # displace atoms to remove the void box
     for i in range(0,len(self.atoms_pos)):                                                                   
       uxy=self.UxUy(self.atoms_pos[i][0], self.atoms_pos[i][1])
-      self.atoms_pos[i][0] +=uxy[0]
+      self.atoms_pos[i][0] +=uxy[0] # remove these two #s
       self.atoms_pos[i][1] +=uxy[1]
 
   def displace_atoms(self):

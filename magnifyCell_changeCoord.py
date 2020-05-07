@@ -17,8 +17,8 @@ import numpy as np
 from numpy import pi,arctan
 import sys
 
-class gen_disl():
-  """generate a dislocation"""
+class magnifyCell_changeCoord():
+  """magnify a cell and change its coordinate types between direct and cardesion"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0
@@ -111,6 +111,6 @@ class gen_disl():
         for i in self.mag_atoms_pos[k]:
           i=np.dot(np.linalg.inv(self.mag_coord.transpose()),i)
           print format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f")
-
-disl1=gen_disl(sys.argv[1])#"unit_cell")
-disl1.print_disl()
+if __name__=="__main__":
+  disl1=magnifyCell_changeCoord(sys.argv[1])#"unit_cell")
+  disl1.print_disl()

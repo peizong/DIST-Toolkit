@@ -19,7 +19,7 @@ from numpy.linalg import inv
 import sys
 import random
 
-class gen_disl():
+class coordinate_rotation():
   """generate a dislocation"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
@@ -108,6 +108,6 @@ class gen_disl():
       print "\nDirect" 
     for i in self.write_atom_pos:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-
-disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
-disl1.print_new_supercell()
+if __name__=="__main__":
+  dist1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
+  dist1.print_new_supercell()

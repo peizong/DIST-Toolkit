@@ -19,7 +19,7 @@ import sys
 import random
 
 class add_element_labels():
-  """generate a dislocation"""
+  """add element labels to model structure file POSCAR"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0

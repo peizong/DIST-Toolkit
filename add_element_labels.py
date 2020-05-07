@@ -18,7 +18,7 @@ from numpy import pi,arctan
 import sys
 import random
 
-class gen_disl():
+class add_element_labels():
   """generate a dislocation"""
   def __init__(self,filename):
     self.filename=filename
@@ -88,5 +88,5 @@ class gen_disl():
         if j>idx[k-1]-1 and j<idx[k]:
           print format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"),"      ",str(self.labels[k])
 
-disl1=gen_disl(sys.argv[1])#"unit_cell")
-disl1.print_file()
+dist1=add_element_labels(sys.argv[1])#"unit_cell")
+dist1.print_file()

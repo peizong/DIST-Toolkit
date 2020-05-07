@@ -18,8 +18,8 @@ from numpy import pi,arctan
 import sys
 import random
 
-class gen_disl():
-  """generate a dislocation"""
+class gen_Random_Struct():
+  """generate a random structure for atomistic model"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0
@@ -116,6 +116,6 @@ class gen_disl():
      #   for i in self.randStruct[k]:
      #     i=np.dot(np.linalg.inv(self.coord.transpose()),i)
      #     print format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f")
-
-disl1=gen_disl(sys.argv[1])#"unit_cell")
-disl1.print_random()
+if __name__=="__main__":
+  dist1=gen_Random_Struct(sys.argv[1])#"unit_cell")
+  dist1.print_random()

@@ -19,7 +19,7 @@ from numpy.linalg import inv
 import sys
 import random
 
-class gen_disl():
+class axes_exchange():
   """generate a dislocation"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
@@ -111,5 +111,5 @@ class gen_disl():
     for i in self.write_atom_pos:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
 
-disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
-disl1.print_new_supercell()
+dist1=axes_exchange(sys.argv[1],sys.argv[2])#"unit_cell")
+dist1.print_new_supercell()

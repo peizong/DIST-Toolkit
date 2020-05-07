@@ -20,7 +20,7 @@ import sys
 import random
 
 class axes_exchange():
-  """exchange the axes of the primitive vectors"""
+  """exchange any two of the three primitive vectors"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
     self.filename_coord=filename_coord

@@ -19,8 +19,8 @@ from numpy.linalg import inv
 import sys
 import random
 
-class gen_disl():
-  """generate a dislocation"""
+class coordinate_transformation():
+  """transformation of coordination"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
     self.filename_coord=filename_coord
@@ -104,6 +104,6 @@ class gen_disl():
       print "\nDirect" 
     for i in self.write_atom_pos:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-
-disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
-disl1.print_new_supercell()
+if __name__=="__main__":
+  dist1=coordinate_transformation(sys.argv[1],sys.argv[2])#"unit_cell")
+  dist1.print_new_supercell()

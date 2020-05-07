@@ -18,7 +18,7 @@ import numpy as np
 from numpy import pi,arctan
 import sys
 
-class gen_disl():
+class gen_GSF():
   """generate a dislocation"""
   def __init__(self,filename1, filename2):
     self.filename1=filename1
@@ -148,6 +148,7 @@ class gen_disl():
               self.write_file(self.coord,new_atom_pos,wfile)
         else: print("Please put a right number for the dimensionality!")
       else: print("Please pick 1 or 2 for the number of GSFs!")
-disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
-#disl1.read_data()
-disl1.print_disl()
+if __name__=="__main__":
+  dist1=gen_GSF(sys.argv[1],sys.argv[2])#"unit_cell")
+  #dist1.read_data()
+  dist1.print_disl()

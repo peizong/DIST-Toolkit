@@ -110,6 +110,6 @@ class axes_exchange():
       print "\nDirect" 
     for i in self.write_atom_pos:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-
-dist1=axes_exchange(sys.argv[1],sys.argv[2])#"unit_cell")
-dist1.print_new_supercell()
+if __name__=="__main__":
+  dist1=axes_exchange(sys.argv[1],sys.argv[2])#"unit_cell")
+  dist1.print_new_supercell()

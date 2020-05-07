@@ -20,7 +20,7 @@ import sys
 import random
 
 class axes_exchange():
-  """generate a dislocation"""
+  """exchange the axes of the primitive vectors"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
     self.filename_coord=filename_coord

@@ -19,7 +19,7 @@ from numpy.linalg import inv
 import sys
 
 class gen_disl():
-  """generate a dislocation"""
+  """generate a screw dislocation"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0
@@ -204,5 +204,6 @@ class gen_disl():
     for i in self.disl_atoms_pos_in:
     # for i in j:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-disl1=gen_disl(sys.argv[1])#"unit_cell")
-disl1.print_disl()
+if __name__=="__main__":
+  dist1=gen_disl(sys.argv[1])#"unit_cell")
+  dist1.print_disl()

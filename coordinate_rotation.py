@@ -20,7 +20,7 @@ import sys
 import random
 
 class coordinate_rotation():
-  """generate a dislocation"""
+  """rotation of coordinates"""
   def __init__(self,filename,filename_coord):
     self.filename=filename
     self.filename_coord=filename_coord

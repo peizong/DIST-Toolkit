@@ -112,6 +112,6 @@ class fit_gammaSurface():
       self.plot_gamma_contour()
     if (self.task=='G'):
       print(self.cal_shear_modulus(1))
-
-gS=fit_gammaSurface(sys.argv[1],sys.argv[2])
-gS.post_processing()
+if __name__=="__main__":
+  gS=fit_gammaSurface(sys.argv[1],sys.argv[2])
+  gS.post_processing()

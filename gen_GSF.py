@@ -19,7 +19,7 @@ from numpy import pi,arctan
 import sys
 
 class gen_GSF():
-  """generate a dislocation"""
+  """generate a generalized stacking fault"""
   def __init__(self,filename1, filename2):
     self.filename1=filename1
     self.filename2=filename2

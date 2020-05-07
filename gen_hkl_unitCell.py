@@ -438,9 +438,9 @@ class prepareOutput:
     print self.OCoordType
     for i in self.OAtomPosition:
       print i[0],"      ",i[1],"        ",i[2]
-
-Mg=prepareOutput(sys.argv[1]) #("in.gen-hkl-unit-cell")
-Mg.print_supercell()
+if __name__=="__main__":
+  Mg=prepareOutput(sys.argv[1]) #("in.gen-hkl-unit-cell")
+  Mg.print_supercell()
 
 # Here come the input data: CompSysName, SuperCellSize, hkl, BravLatt, CellType
 #------------------------------------------------------------------------------------

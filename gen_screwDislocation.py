@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/nfs/apps/Compilers/Python/Anaconda/2.7/bin/python
+##!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -19,7 +20,7 @@ from numpy.linalg import inv
 import sys
 
 class gen_disl():
-  """generate a screw dislocation"""
+  """generate a dislocation"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0
@@ -32,10 +33,14 @@ class gen_disl():
     self.N=[1,1,1] #default, will read from structural file
     self.n_unit=[]
     self.mag_coord=np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+    self.disl_centers=[]
+    self.sub_matr2x2=[]
+    self.sign=[]
     self.mag_atoms_pos=[] 
     self.disl_center=np.array([0,0])
     self.disl_atoms_pos=[]
     self.disl_atoms_pos_in=[]
+    self.period_N=20 # used to calculate u_err to get absolutely convergent strain field
     #self.magnify_cell()
   def read_data(self):
     with open(self.filename,'r') as in_file:
@@ -107,14 +112,26 @@ class gen_disl():
     # for Left bottom right up
     self.x0=0.5*(np.dot(L0,L1)+np.dot(L1,L1))/\
             (np.dot(L0,L0)+np.dot(L1,L1)+2*np.dot(L0,L1))
+    #need to remove this line!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    self.x0=1.0/3 #-0.017
     L2,L3=L0,(1-2*self.x0)*(L0+L1)
     self.theta0=arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
-    #self.theta0=np.pi-arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
-    # for Left Up right bottom
-    #self.x0=0.5*(np.dot(L1,L1)-np.dot(L0,L1))/\
-    #        (np.dot(L0,L0)+np.dot(L1,L1)-2*np.dot(L0,L1))
-    #L2,L3=L0,-(1-self.x0)*(L0-L1)
-    #self.theta0=arccos(np.dot(L2,L3)/np.dot(L2,L2)**0.5/np.dot(L3,L3)**0.5)
+    # define self.disl_centers, self.sign, sub_matr2x2
+    disl_centers=[]
+    if self.num_disl==4:
+      self.sign=np.array([1,-1,-1,1])
+      disl_centers=np.array([[0.25,0.25],[0.25,0.75],[0.75,0.25],[0.75,0.75]])
+    elif self.num_disl==2:
+      self.sign=np.array([-1,1]) #np.array([1,-1])
+      disl_centers=np.array([[self.x0,self.x0],[1-self.x0,1-self.x0]])
+      #disl_centers=np.array([[self.x0,1-self.x0],[1-self.x0,self.x0]])
+    elif self.num_disl==1:
+      self.sign=np.array([1])
+      disl_centers=np.array([[0.0,0.0]])
+    else: return None
+    self.sub_matr2x2=np.array([[self.mag_coord[0][0],self.mag_coord[0][1]],
+                               [self.mag_coord[1][0],self.mag_coord[1][1]]])
+    self.disl_centers=np.dot(disl_centers,self.sub_matr2x2)
   def angle(self,x,y):
      if x==0:
        if y>=0: return pi/2.0
@@ -123,52 +140,55 @@ class gen_disl():
        if y >=0 : return arctan(y/x)
        if y <0: return 2*pi+arctan(y/x)
      elif x<0 : return pi+arctan(y/x)
-  def adjust_angle(self,x,y,start_angle):
+  def adjust_angle(self,x,y):
+    start_angle=self.theta0 # adjust the starting angle, currently not useful, but not harmful
     adjusted_angle=self.angle(x,y)+start_angle
     while (adjusted_angle <0): adjusted_angle += 2*pi
     while (adjusted_angle >2*pi): adjusted_angle -= 2*pi
     return adjusted_angle
-  def theta(self,x,y,N,theta0):
+  #recover the periodicity of the dislocation strain field by adding ghost dislocation
+  def get_u_err(self):
+    u_arr=[]
+    # the three corners, OO,OA,OB
+    corner_pts=np.array([[0.,0.],[self.sub_matr2x2[0][0],self.sub_matr2x2[0][1]],\
+                                 [self.sub_matr2x2[1][0],self.sub_matr2x2[1][1]]])
+    for pts in corner_pts:
+      u_pts=0.
+      for i in range(0,self.num_disl):
+        for jx in range(0,self.period_N): #20):
+          for jy in range(0,self.period_N): #20):
+            new_center=(jx-self.period_N/2)*self.sub_matr2x2[0]+(jy-self.period_N/2)*self.sub_matr2x2[1]+self.disl_centers[i]
+            dc_x,dc_y=new_center[0],new_center[1]
+            u_pts +=self.b/(2*pi)*self.sign[i]*self.adjust_angle(pts[0]-dc_x,pts[1]-dc_y)
+      u_arr.append(u_pts)
+    OAB_mat=np.array([[corner_pts[0][0],corner_pts[0][1],1.],
+                      [corner_pts[1][0],corner_pts[1][1],1.],
+                      [corner_pts[2][0],corner_pts[2][1],1.]])
+    g_mat=np.dot(np.linalg.inv(OAB_mat),np.asarray(u_arr))
+    g_vec,g0=g_mat[0:2],g_mat[2]
+    return g_vec, g0
+  def theta(self,x,y,N): #,theta0):
     shift_z=0
-    if self.num_disl==4: 
-      sign=np.array([1,-1,-1,1])
-      disl_centers=np.array([[0.25,0.25],[0.25,0.75],[0.75,0.25],[0.75,0.75]])
-    elif self.num_disl==2: 
-      sign=np.array([1,-1])
-      #disl_centers=np.array([[self.x0+1.0/self.mag_coord[0][0]*0.21213*5,self.x0+1.0/self.mag_coord[1][1]*0.12247*5],[1-self.x0,1-self.x0]])
-      disl_centers=np.array([[self.x0,self.x0],[1-self.x0,1-self.x0]])
-      #disl_centers=np.array([[self.x0,1-self.x0],[1-self.x0,self.x0]])
-    elif self.num_disl==1: 
-      sign=np.array([1])
-      disl_centers=np.array([[0.0,0.0]])
-    else: return None
-    disl_centers=disl_centers*np.array([self.mag_coord[0][0],self.mag_coord[1][1]])
-# tobedeleted
-#    disl_centers=np.array([[4.24,4.5],[12.37,13.0]])
     for i in range(0,self.num_disl):
-      #shift_z +=self.b/(2*pi)*sign[i]*self.adjust_angle(x-disl_centers[i,0],y-disl_centers[i,1],theta0)
-    #return self.b/(2*pi)*self.adjust_angle(x-self.disl_center[0],y-self.disl_center[1],0/2.0)
-      for jx in range(0,80):
-        dc_x=(jx-40)*self.mag_coord[0][0]+disl_centers[i,0]
-        for jy in range(0,80):
-          dc_y=(jy-40)*self.mag_coord[1][1]+disl_centers[i,1]
-          shift_z +=self.b/(2*pi)*sign[i]*self.adjust_angle(x-dc_x,y-dc_y,theta0)
+      for jx in range(0,self.period_N): #20):
+        for jy in range(0,self.period_N): #20):
+          new_center=(jx-self.period_N/2)*self.sub_matr2x2[0]+ \
+                     (jy-self.period_N/2)*self.sub_matr2x2[1]+self.disl_centers[i]
+          dc_x,dc_y=new_center[0],new_center[1]
+          shift_z +=self.b/(2*pi)*self.sign[i]*self.adjust_angle(x-dc_x,y-dc_y) 
     return shift_z
-# to be deleted
-  def ur(self,x,y):
-    u0=[-0.25,0.25]
-    r=[x,y]
-    return -np.dot(u0,r)
   def displace_atoms(self):
     self.read_data()
     self.magnify_cell()
     self.cal_disl_pattern()
+    g_vec,g0=self.get_u_err() # get the g_vec, g0 to restore the periodicity
     for i_unitCell in range(0,sum(self.n_unit)):
       self.mag_atoms_pos[i_unitCell].pop(0)
       for j in range(0,len(self.mag_atoms_pos[i_unitCell])):
         i=self.mag_atoms_pos[i_unitCell][j]
       #for i in self.mag_atoms_pos[i_unitCell]: 
-        i[2] += self.theta(i[0],i[1],self.num_disl,self.theta0) #+self.ur(i[0],i[1]) #use 4) for quadruple poles
+        u_err=np.dot(g_vec,np.array([i[0],i[1]]))
+        i[2] += self.theta(i[0],i[1],self.num_disl)-u_err 
         self.disl_atoms_pos.append(i)
   def in_box(self,atom_pos):
      for i in range(0,3):
@@ -180,9 +200,6 @@ class gen_disl():
      for i in self.disl_atoms_pos:
        i=self.in_box(np.dot(inv(self.mag_coord.transpose()),i))
        atom_in_direct.append(i)
-#       atom_in_direct.append(self.in_box(np.dot(inv(self.mag_coord.transpose()),i)))    
-     #if self.coord_type=='Direct':
-     #  self.write_atom_pos=atom_in_direct
      if self.coord_type=='Cartesian':
        for i in atom_in_direct:
          i=np.dot(self.mag_coord.transpose(),i)
@@ -198,12 +215,8 @@ class gen_disl():
       print format(self.mag_coord[i,0],"03f"),"	",format(self.mag_coord[i,1],"03f"),"	",format(self.mag_coord[i,2],"03f")
     for i in self.N[0]*self.N[1]*self.N[2]*np.asarray(self.n_unit):
       print i,
-#    print '\n'
     print "\nCartesian" #self.coord_type
-#    print(self.mag_atoms_pos)
     for i in self.disl_atoms_pos_in:
-    # for i in j:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-if __name__=="__main__":
-  dist1=gen_disl(sys.argv[1])#"unit_cell")
-  dist1.print_disl()
+disl1=gen_disl(sys.argv[1])#"unit_cell")
+disl1.print_disl()

@@ -20,12 +20,13 @@ from numpy import sign, pi,arctan,arctan2,log
 import sys
 
 class gen_disl():
-  """generate an edge dislocation"""
+  """generate a dislocation"""
   def __init__(self,filename):
     self.filename=filename
     self.latt_para=1.0
     self.b=1.0
     self.w=1.0 #0.1
+    self.d=12 #defult 0
     self.sys_name=""
     self.disl_along_axis=1 
     self.coord_type="" #"Direct" #"Cartesian"
@@ -125,43 +126,52 @@ class gen_disl():
       else: return False
     else: print("Not support dislocations more than two!")
       
-  def UxUy(self,x,y):
+  def UxUz(self,x,y):
     #nu=0.3
     #e=1e-8 #avoid 1/0 error
-    ux,uy=0.0,0.0
+    ux,uz=0.0,0.0
     x,y=x-self.disl_center[0],y-self.disl_center[1]
     if self.num_disl==1:
       if self.disl_along_axis==1:
-        uy=0.0
+        uz=0.0
         if (y>0):
           if x>0:
-            ux=self.b/(pi)*arctan(-(x-self.b)/self.w)+self.b/2.0
+            ux=self.b/(pi)*arctan(-(x-self.b)/self.w) #+self.b/2.0
             ux=-ux
-          else: ux=self.b/(pi)*arctan(x/self.w)+self.b/2.0
-          #ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+self.b/2 #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
+          else: ux=self.b/(pi)*arctan(x/self.w) #+self.b/2.0
+          #self.b/(2*pi)*(arctan2(y,x)+x*y/(x**2+y**2+e)/(2*(1-nu)))
         else: ux=0.0
       elif self.disl_along_axis==2:
         ux=0.0
         if (x>0):
-          uy=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
-        else: uy=0.0
-      else: ux,uy=0.0,0.0
+          uz=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
+        else: uz=0.0
+      else: ux,uz=0.0,0.0
     elif self.num_disl==2:
       if self.disl_along_axis==1:
-        uy=0.0
+        uz=0.0
         if ((y>-self.disl_center[1]/2.0) and (y<=self.disl_center[1]/2.0)): #(y<=self.disl_center[1]*0.5 or y>=-self.disl_center[1]*0.5):
-          ux=self.b/pi*(self.w/(self.w**2+x**2))*sign(-x) #+(self.b/pi*arctan(x/self.b/0.5)+self.b/2.0)
+          #ux=self.b/pi*arctan(x/self.w)*sign(-x) #+ self.b/2.
+          f_ux=self.b/(2*pi)*sign(-x) #do not forget sign(-x) to adjust the displacement
+          ux=self.b/2.+ f_ux*arctan((x-self.b*self.d)/self.w)+f_ux*arctan((x+self.b*self.d)/self.w)
+          ux *= sign(-x)
+          #for negative SFE configuration only
+          f_uz=3**0.5*self.b/(6*pi)
+          uz=f_uz*arctan((x+self.b*self.d)/self.w)-f_uz*arctan((x-self.b*self.d)/self.w)
+          #ux *= sign(x)
+          #ux += self.b/2.0
+          #print("ux: ",ux)
         else: ux=0.0
       elif self.disl_along_axis==2:
         ux=0.0
         if ((x>-self.disl_center[0]/2.0) and (x<=self.disl_center[0]/2.0)):
-          uy=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
-      else: ux,uy=0.0,0.0  
+          uz=self.b/pi*(self.w/(self.w**2+y**2))*sign(-y)
+      else: ux,uz=0.0,0.0  
     else: 
-      ux,uy=0.0,0.0
+      ux,uz=0.0,0.0
       print "Please supply correct number of dislocation!"
     #uz=0 #-self.b/(2*pi)*((1-2*nu)/4/(1-nu)*log(x**2+y**2+e)+(x**2-y**2)/(4*(1-nu))/(x**2+y**2+e))
-    return [ux,uy] #self.b/(2*pi)*self.angle(x-self.disl_center[0],y-self.disl_center[1])
+    return [ux,uz] #self.b/(2*pi)*self.angle(x-self.disl_center[0],y-self.disl_center[1])
 
   def make_dislocation(self):
     # remove atoms and make a void box
@@ -174,9 +184,9 @@ class gen_disl():
       self.atoms_pos.pop(i)
     # displace atoms to remove the void box
     for i in range(0,len(self.atoms_pos)):                                                                   
-      uxy=self.UxUy(self.atoms_pos[i][0], self.atoms_pos[i][1])
-      self.atoms_pos[i][0] +=uxy[0] # remove these two #s
-      self.atoms_pos[i][1] +=uxy[1]
+      uxz=self.UxUz(self.atoms_pos[i][0], self.atoms_pos[i][1])
+      self.atoms_pos[i][0] +=uxz[0] # remove these two #s
+      self.atoms_pos[i][2] +=uxz[1]
 
   def displace_atoms(self):
     #self.magnify_cell()
@@ -186,7 +196,7 @@ class gen_disl():
     #  self.mag_atoms_pos[i_unitCell].pop(0)
     #  for i in self.mag_atoms_pos[i_unitCell]: 
     for i in self.atoms_pos:
-        i[0],i[1] = i[0]+self.UxUy(i[0],i[1])[0],i[1]+self.UxUy(i[0],i[1])[1]
+        i[0],i[2] = i[0]+self.UxUz(i[0],i[1])[0],i[2]+self.UxUz(i[0],i[1])[1]
         self.disl_atoms_pos.append(i)
   def move_into_box(self,pos):
     for j in range(0,2):
@@ -225,6 +235,5 @@ class gen_disl():
     print "Cartesian"
     for i in self.atoms_pos:
       print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
-if __name__=="__main__":
-  dist1=gen_disl(sys.argv[1])#"unit_cell")
-  dist1.print_disl()
+disl1=gen_disl(sys.argv[1])#"unit_cell")
+disl1.print_disl()

@@ -1,4 +1,6 @@
-#!/usr/bin/python
+#!/nfs/apps/Compilers/Python/Anaconda/2.7/bin/python
+
+##!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -120,6 +122,8 @@ class gen_disl():
       self.mag_atoms_pos[i_unitCell].pop(0)
       for i in self.mag_atoms_pos[i_unitCell]: 
         i[0],i[1] = i[0]+self.UxUy(i[0],i[1])[0],i[1]+self.UxUy(i[0],i[1])[1]
+        #remove soon, for case C only
+        i[0] +=self.b/2.
         self.disl_atoms_pos.append(i)
   def move_into_box(self,pos):
     for j in range(0,2):

@@ -14,7 +14,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function # python3 style print
 import numpy as np
 from numpy import sign, pi,arctan,arctan2,log
 import sys
@@ -46,8 +46,8 @@ class gen_disl():
       for line in in_file:
         ll=line.split()
         if count==1: 
-          if len(ll)==6:
-            self.sys_name,self.b,self.disl_along_axis,self.N=ll[0],float(ll[1]),int(ll[2]),[int(ll[3]),int(ll[4]),int(ll[5])]
+          if len(ll)==7:
+            self.sys_name,self.b,self.disl_along_axis,self.num_disl,self.N=ll[0],float(ll[1]),int(ll[2]),int(ll[3]),[int(ll[4]),int(ll[5]),int(ll[6])]
           if len(ll)==4:
             self.sys_name,self.b,self.disl_along_axis,self.num_disl=ll[0],float(ll[1]),int(ll[2]),int(ll[3])
           self.w=self.w*self.b 
@@ -78,7 +78,8 @@ class gen_disl():
       k1 +=1
       if k1==1: exit
     n0=len(self.atoms_pos)
-    if n0 != sum(self.n_unit): print "Some atomic positions are missing!"
+    #print("n0: ",n0,sum(self.n_unit))
+    if n0 != sum(self.n_unit): print("Some atomic positions are missing!")
     if self.coord_type == 'Direct':
       for ix in range(0,self.N[0]):
         for iy in range(0,self.N[1]):
@@ -102,6 +103,7 @@ class gen_disl():
     center = center/2.0 #len(self.atoms_pos)
     self.disl_center= center
   def is_in_void_box(self,x,y):
+    #print("self.num_disl: ",self.num_disl)
     x,y=x-self.disl_center[0],y-self.disl_center[1]
     if self.num_disl==1:                           
       if self.disl_along_axis==1:
@@ -169,7 +171,7 @@ class gen_disl():
       else: ux,uz=0.0,0.0  
     else: 
       ux,uz=0.0,0.0
-      print "Please supply correct number of dislocation!"
+      print("Please supply correct number of dislocation!")
     #uz=0 #-self.b/(2*pi)*((1-2*nu)/4/(1-nu)*log(x**2+y**2+e)+(x**2-y**2)/(4*(1-nu))/(x**2+y**2+e))
     return [ux,uz] #self.b/(2*pi)*self.angle(x-self.disl_center[0],y-self.disl_center[1])
 
@@ -224,16 +226,16 @@ class gen_disl():
     #self.displace_atoms()
     #print self.disl_atoms_pos
     #self.move_remove_atoms()
-    print self.sys_name
-    print 1.0 #self.latt_para
+    print(self.sys_name)
+    print(1.0) #self.latt_para
     for i in range(0,3):
-      print format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",format(self.coord[i,2],"03f")
+      print(str(format(self.coord[i,0],"03f"))+"	"+str(format(self.coord[i,1],"03f"))+"	"+str(format(self.coord[i,2],"03f")))
     #for i in self.N[0]*self.N[1]*self.N[2]*np.asarray(self.n_unit):
     #  print i,
-    print len(self.atoms_pos)
+    print(len(self.atoms_pos))
     #print "\nCartesian" #self.coord_type
-    print "Cartesian"
+    print("Cartesian")
     for i in self.atoms_pos:
-      print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
+      print(str(format(i[0],"03f"))+"	"+str(format(i[1], "03f"))+"	"+str(format(i[2],"03f"))) 
 disl1=gen_disl(sys.argv[1])#"unit_cell")
 disl1.print_disl()

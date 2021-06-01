@@ -306,6 +306,9 @@ def FBravLattUnit(CryStru):
       return array([[0,0,0],[0.5,0.5,0]])
   elif round(CryStru) == 3:
       return array([[0,0,0],[0.5,0.5,0.5]])
+  elif CryStru == 4.5:
+      return array([[0,0,0],[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5],[0.25,0.25,0.25],
+                    [0.25,0.75,0.75],[0.75,0.25,0.75],[0.75,0.75,0.25]])
   elif round(CryStru) == 4:
       return array([[0,0,0],[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5]])
   else:
@@ -320,6 +323,8 @@ def FNoOfBasisVector(CryStru):
     return 1
   elif round(CryStru) == 2 or round(CryStru) == 3:
     return 2
+  elif CryStru == 4.5:
+    return 8
   elif round(CryStru) == 4:
     return 4
   else:

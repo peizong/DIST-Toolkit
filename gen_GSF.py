@@ -18,8 +18,8 @@ import numpy as np
 from numpy import pi,arctan
 import sys
 
-class gen_GSF():
-  """generate a generalized stacking fault"""
+class gen_disl():
+  """generate a dislocation"""
   def __init__(self,filename1, filename2):
     self.filename1=filename1
     self.filename2=filename2
@@ -72,12 +72,15 @@ class gen_GSF():
     new_coord=[]
     new_coord.append(self.coord[0])
     new_coord.append(self.coord[1])
-    stepX=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
-    stepY=np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
-    X=i*stepX[0]+j*stepY[0]+self.coord[2][0]
-    Y=i*stepX[1]+j*stepY[1]+self.coord[2][1]
-    Z=i*stepX[2]+j*stepY[2]+self.coord[2][2]
-    new_coord.append([X,Y,Z])
+    if int(self.GSFE_requirements[0])==2:
+      new_coord.append([self.coord[2][0],self.coord[2][1],self.coord[2][2]+float(self.GSFE_requirements[7])])
+    else:
+      stepX=np.asarray(self.GSFE_requirements[2])*float(self.GSFE_requirements[4][0])/(int(self.GSFE_requirements[5][0])-1)
+      stepY=np.asarray(self.GSFE_requirements[3])*float(self.GSFE_requirements[4][1])/(int(self.GSFE_requirements[5][1])-1)
+      X=i*stepX[0]+j*stepY[0]+self.coord[2][0]
+      Y=i*stepX[1]+j*stepY[1]+self.coord[2][1]
+      Z=i*stepX[2]+j*stepY[2]+self.coord[2][2]
+      new_coord.append([X,Y,Z])
     return new_coord
   def new_atom_pos(self,i,j):
     new_atom_pos=[]
@@ -136,11 +139,12 @@ class gen_GSF():
               self.write_file(new_coord,self.atoms_pos,wfile)
         else: print("Please put a right number for the dimensionality!")
       elif int(self.GSFE_requirements[0]) == 2:
-        self.coord[2][2] += float(self.GSFE_requirements[7])
+        #self.coord[2][2] += float(self.GSFE_requirements[7])
+        new_coord=self.new_coord(0,0)
         if int(self.GSFE_requirements[1]) == 1:
           new_atom_pos=self.new_atom_pos(i,i)
           with open("POSCAR"+str(i),'w') as wfile:
-            self.write_file(self.coord,new_atom_pos,wfile)
+            self.write_file(new_coord,new_atom_pos,wfile)
         elif int(self.GSFE_requirements[1]) == 2:
           for j in range(0,int(self.GSFE_requirements[5][1])):   
             new_atom_pos=self.new_atom_pos(i,j)           
@@ -148,7 +152,6 @@ class gen_GSF():
               self.write_file(self.coord,new_atom_pos,wfile)
         else: print("Please put a right number for the dimensionality!")
       else: print("Please pick 1 or 2 for the number of GSFs!")
-if __name__=="__main__":
-  dist1=gen_GSF(sys.argv[1],sys.argv[2])#"unit_cell")
-  #dist1.read_data()
-  dist1.print_disl()
+disl1=gen_disl(sys.argv[1],sys.argv[2])#"unit_cell")
+#disl1.read_data()
+disl1.print_disl()

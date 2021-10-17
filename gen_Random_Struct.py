@@ -80,37 +80,37 @@ class gen_Random_Struct():
     #    self.randStruct[1].append(self.atoms_pos[i]) 
   def print_random(self):
     self.gen_random()
-    print self.sys_name
-    print self.latt_para
+    print(self.sys_name)
+    print(self.latt_para)
     for i in range(0,3):
-      print format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
-            format(self.coord[i,2],"03f")
+      print(format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
+            format(self.coord[i,2],"03f"))
     #for i in range(1,len(self.N)):
-    #  print self.N[i], 
+    #  print(self.N[i]), 
     #print self.N[0]-sum(self.N[1:len(self.N)])
     for i in range(0,len(self.n_unit)-1):
       print(self.n_unit[i]),
     print(self.n_unit[len(self.n_unit)-1])
     if self.w_coord == 1:
-      print "Cartesian" #self.coord_type
+      print("Cartesian") #self.coord_type
       for i in self.randStruct:
         if self.w_coord==self.coord_type:
-          print format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f")
+          print(format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"))
         else:
           i=np.dot(self.coord.transpose(),i)
-          print format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f") 
+          print(format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"))
      # for k in range(0,len(self.N)):
      #   self.randStruct[k].pop(0)
      #   for i in self.randStruct[k]:
      #     print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
     elif self.w_coord == 0:
-      print "Direct" #self.coord_type
+      print("Direct") #self.coord_type
       for i in self.randStruct:
         if self.w_coord==self.coord_type:
-          print format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f")
+          print(format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f"))
         else:
           i=np.dot(np.linalg.inv(self.coord.transpose()),i)
-          print format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f")
+          print(format(i[0],"03f"),"    ",format(i[1], "03f")," ",format(i[2],"03f"))
      # for k in range(0,len(self.N)):
      #   self.randStruct[k].pop(0)
      #   for i in self.randStruct[k]:

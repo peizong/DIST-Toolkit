@@ -1,5 +1,4 @@
-#!/nfs/apps/Compilers/Python/Anaconda/2.7/bin/python
-##!/usr/bin/python
+#!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -13,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 import numpy as np
 from numpy import pi,arccos,arctan
 from numpy.linalg import inv
@@ -85,7 +84,7 @@ class gen_disl():
       k1 +=1
       if k1==3: break #exit
     n0=len(self.atoms_pos)
-    if n0 != sum(self.n_unit): print "Some atomic positions are missing!"
+    if n0 != sum(self.n_unit): print("Some atomic positions are missing!")
     if self.coord_type == 'Direct':
       for ix in range(0,self.N[0]):
         for iy in range(0,self.N[1]):
@@ -209,14 +208,16 @@ class gen_disl():
   def print_disl(self):
     self.displace_atoms()
     self.move_in_box()
-    print self.sys_name
-    print 1.0 #self.latt_para
+    print(self.sys_name)
+    print(1.0) #self.latt_para
     for i in range(0,3):
-      print format(self.mag_coord[i,0],"03f"),"	",format(self.mag_coord[i,1],"03f"),"	",format(self.mag_coord[i,2],"03f")
+      print(format(self.mag_coord[i,0],"03f"),"	",format(self.mag_coord[i,1],"03f"),"	",format(self.mag_coord[i,2],"03f"))
+    str_atom_num=""
     for i in self.N[0]*self.N[1]*self.N[2]*np.asarray(self.n_unit):
-      print i,
-    print "\nCartesian" #self.coord_type
+      str_atom_num += str(i)+" "
+    print(str_atom_num)
+    print("Cartesian") #self.coord_type
     for i in self.disl_atoms_pos_in:
-      print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
+      print(format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f"))
 disl1=gen_disl(sys.argv[1])#"unit_cell")
 disl1.print_disl()

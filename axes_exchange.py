@@ -12,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 import numpy as np
 from numpy import pi,arctan
 from numpy.linalg import inv
@@ -97,19 +97,21 @@ class axes_exchange():
          self.write_atom_pos.append(i)
   def print_new_supercell(self):
     self.orthogonalize()
-    print self.sys_name
-    print self.latt_para
+    print(self.sys_name)
+    print(self.latt_para)
     for i in range(0,3):
-      print format(self.new_coord[i,0],"03f"),"	",format(self.new_coord[i,1],"03f"),"	",\
-            format(self.new_coord[i,2],"03f")
+      print(format(self.new_coord[i,0],"03f"),"	",format(self.new_coord[i,1],"03f"),"	",\
+            format(self.new_coord[i,2],"03f"))
+    str_atom_num=""
     for i in self.n_unit:
-      print i,
+      str_atom_num+=str(i)+" "
+    print(str_atom_num)
     if self.w_coord == 1:
-      print "\nCartesian" #self.coord_type
+      print("Cartesian") #self.coord_type
     elif self.w_coord == 0:
-      print "\nDirect" 
+      print("Direct") 
     for i in self.write_atom_pos:
-      print format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f") 
+      print(format(i[0],"03f"),"	",format(i[1], "03f"),"	",format(i[2],"03f"))
 if __name__=="__main__":
   dist1=axes_exchange(sys.argv[1],sys.argv[2])#"unit_cell")
   dist1.print_new_supercell()

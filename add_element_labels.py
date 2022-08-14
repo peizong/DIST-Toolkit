@@ -12,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 import numpy as np
 from numpy import pi,arctan
 import sys
@@ -67,15 +67,15 @@ class add_element_labels():
           self.atoms_pos.append(ll[0:3])
   def print_file(self):
     self.read_data()
-    print self.sys_name
-    print self.latt_para
+    print(self.sys_name)
+    print(self.latt_para)
     for i in range(0,3):
-      print format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
-            format(self.coord[i,2],"03f")
+      print(format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
+            format(self.coord[i,2],"03f"))
     for i in range(0,len(self.n_unit)-1):
       print(self.n_unit[i]),
     print(self.n_unit[len(self.n_unit)-1])
-    print self.coord_type
+    print(self.coord_type)
     idx,begin_n=[],0
     for i in range(0,len(self.n_unit)):
       begin_n += self.n_unit[i]
@@ -83,10 +83,10 @@ class add_element_labels():
     for j in range(0,len(self.atoms_pos)):
       i=self.atoms_pos[j]
       if j<idx[0]:
-        print format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"),"	",str(self.labels[0])
+        print(format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"),"	",str(self.labels[0]))
       for k in range(1,len(idx)):
         if j>idx[k-1]-1 and j<idx[k]:
-          print format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"),"      ",str(self.labels[k])
+          print(format(i[0],"03f"),"   ",format(i[1], "03f")," ",format(i[2],"03f"),"      ",str(self.labels[k]))
 
 if __name__=="__main__":
   dist1=add_element_labels(sys.argv[1])#"unit_cell")

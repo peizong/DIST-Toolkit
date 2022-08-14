@@ -1,6 +1,4 @@
-#!/share/apps/python/3.8.6/intel/bin/python
-
-##!/usr/bin/python
+#!/usr/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -14,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 import numpy as np
 from numpy import sign, pi,arctan,arctan2,log
 import sys

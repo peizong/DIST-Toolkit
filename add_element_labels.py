@@ -72,9 +72,10 @@ class add_element_labels():
     for i in range(0,3):
       print(format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
             format(self.coord[i,2],"03f"))
-    for i in range(0,len(self.n_unit)-1):
-      print(self.n_unit[i]),
-    print(self.n_unit[len(self.n_unit)-1])
+    str_atom_num=""
+    for i in self.n_unit:
+      str_atom_num += str(i)+" "
+    print(str_atom_num)
     print(self.coord_type)
     idx,begin_n=[],0
     for i in range(0,len(self.n_unit)):

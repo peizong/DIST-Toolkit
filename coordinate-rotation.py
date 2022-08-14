@@ -103,6 +103,7 @@ class gen_disl():
     str_atom_num=""
     for i in self.n_unit:
       str_atom_num += str(i)+" "
+    print(str_atom_num)
     if self.w_coord == 1:
       print("Cartesian") #self.coord_type
     elif self.w_coord == 0:

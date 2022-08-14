@@ -12,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 #----------------Description of its function--------
 # This code can create a supercell with a designated plane {hkl}(e.g. {1,1,1}) for
 # any crystal structure.
@@ -73,7 +73,7 @@ def FVecsAngle(va,vb):
     return np.arccos(FVecDot(va,vb)/(FVecLength(va)*FVecLength(vb)))
 #def FVecNorm(va):
 #    if FVecLength(va)==0.0:
-#        print "Attention! Normalized vector is 0 vector!"
+#        print("Attention! Normalized vector is 0 vector!")
 #    else:
 #        return va/FVecLength(va)
 def FVecsAreEqual(va,vb):
@@ -100,7 +100,7 @@ def FBravaisCoord(BravLatt):
             [LattCons[2]*ca1, LattCons[2]*pp/sa2, LattCons[2]*mm/sa2]])
         return xyz
     else:
-        print "Error, the crystal structure does not exist!"
+        print("Error, the crystal structure does not exist!")
         return 0
 def FPlaneDistance(hkl,BravLatt):
     LattCons = BravLatt[0]
@@ -150,7 +150,7 @@ def FNewPrimitiveVectors(hkl,BravLatt,CryStru):
     elif FTrunc(CryStru) == 3:
         secShortAtomDis=0.5*3**0.5
     else:
-        print "Wrong crystal structure! Please check your input data!"
+        print("Wrong crystal structure! Please check your input data!")
     #V0 = FVecTriProduct(BravVectors[0],BravVectors[1],BravVectors[2])/VFactor
     # first step: get three perpendicular vectors vs. hkl
     if h>0.0 :
@@ -248,7 +248,7 @@ def FNewPrimitiveVectors(hkl,BravLatt,CryStru):
     if FVecTriProduct(a,b,c) <0:
         c = -c
     elif FVecTriProduct(a,b,c) == 0:
-        print "Error, found primitive vectors are not correct!"
+        print("Error, found primitive vectors are not correct!")
     abc = array([a,b,c])
     return abc
 # 2.2 Judge the positions of atoms relative to the supercell box: inside or outside
@@ -312,7 +312,7 @@ def FBravLattUnit(CryStru):
   elif round(CryStru) == 4:
       return array([[0,0,0],[0.5,0.5,0],[0.5,0,0.5],[0,0.5,0.5]])
   else:
-      print "other cases will be added!"
+      print("other cases will be added!")
       return 0
 
 # find the number of basis vectors;
@@ -343,7 +343,7 @@ def FPrimitiveVectorsByCellType(CellType,OldPrimitiveVector):
     elif CellType == 0 or CellType == 1:
         return OldPrimitiveVector
     else:
-        print "Wrong Cell Type! Please enter the cell type again!"
+        print("Wrong Cell Type! Please enter the cell type again!")
 def FCoordinateType(CoordType):
     if CoordType == 0:
         return "Direct"
@@ -435,14 +435,14 @@ class prepareOutput:
     ''' 3.3 write structural file'''
     self.read_data()
     self.cal_parameters()
-    print self.sys_name
-    print self.latt_para
+    print(self.sys_name)
+    print(self.latt_para)
     for i in self.OPrimitiveVectors:
-      print i[0],"  ",i[1],"        ",i[2]
-    print self.OSuperCellSize
-    print self.OCoordType
+      print(i[0],"  ",i[1],"        ",i[2])
+    print(self.OSuperCellSize)
+    print(self.OCoordType)
     for i in self.OAtomPosition:
-      print i[0],"      ",i[1],"        ",i[2]
+      print(i[0],"      ",i[1],"        ",i[2])
 if __name__=="__main__":
   Mg=prepareOutput(sys.argv[1]) #("in.gen-hkl-unit-cell")
   Mg.print_supercell()

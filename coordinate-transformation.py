@@ -1,4 +1,4 @@
-#!/share/apps/python/3.8.6/intel/bin/python
+#!/bin/python
 
 ############################################################################### 
 #                                                                          * F# 
@@ -12,7 +12,7 @@
 # Computer Physics Communications 233(2018)44-50.                          0 T# 
 #                                                                          * *# 
 ###############################################################################
-
+from __future__ import print_function
 import numpy as np
 from numpy import pi,arctan
 from numpy.linalg import inv
@@ -98,8 +98,9 @@ class gen_disl():
     for i in range(0,3):
       print(format(self.new_coord[i,0],"03f"),"	",format(self.new_coord[i,1],"03f"),"	",\
             format(self.new_coord[i,2],"03f"))
+    str_atom_num=""
     for i in self.n_unit:
-      print(i),
+      str_atom_num += str(i)+" "
     if self.w_coord == 1:
       print("Cartesian") #self.coord_type
     elif self.w_coord == 0:

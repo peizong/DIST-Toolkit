@@ -31,3 +31,12 @@ author = "Zongrui Pei",
 keywords = "Dislocation, Stacking fault, Simulation, Toolkit",
 abstract = "Dislocations are important defects determining the mechanical properties in metallic materials for structural applications. In order to simulate dislocations, either generalized stacking faults (GSFs) or atomistic dislocation structures need to be constructed firstly. So far there is a lack of light toolkit to help easily generate supercells with GSFs or dislocations. Easy-to-use independent tools to generate any screw or edge dislocations in any crystal structures, will reduce the barrier for dislocation simulations and probably attract more beginners to embark on such mechanical-properties related simulations. Based on an effective algorithm we develop a toolkit for dislocation simulations using Python, a computer language that is readily available in almost all operation systems. Besides, this toolkit also includes tools for multi-scale Peierls–Nabarro modeling of dislocations with gamma surfaces as the key input information. This part is written in C++ language."
 }
+
+
+-----------------generation of a screw dislocation--------------------
+The code is not smart enough. You have to (i) use cartesian coordinate and (ii) make sure the supercell size is the same as one with dislocation. It cannot magnify and generate dislocation at the same time. Assume you prepare your bcc_super_cart, dislocation will be inserted without changing its size. You can do the following to get a dislocation:
+python ../../../gen_screwDislocation.py bcc_super_cart > bcc.screw 
+A screw dislocation can be found in bcc_screw
+You can find these files in examples/BCC/bcc_screw_dislocation/
+Please do not foget to cite my paper if you find the toolkit is useful. Thanks!
+

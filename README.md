@@ -34,6 +34,7 @@ abstract = "Dislocations are important defects determining the mechanical proper
 
 
 #-----------------generation of a screw dislocation--------------------
+
 The code is not smart enough. You have to (i) use cartesian coordinate and (ii) make sure the supercell size is the same as one with dislocation. It cannot magnify and generate dislocation at the same time. Assume you prepare your bcc_super_cart, dislocation will be inserted without changing its size. You can do the following to get a dislocation:
 python ../../../gen_screwDislocation.py bcc_super_cart > bcc.screw 
 A screw dislocation can be found in bcc_screw

@@ -214,7 +214,7 @@ class gen_disl():
       print(format(self.mag_coord[i,0],"03f"),"	",format(self.mag_coord[i,1],"03f"),"	",format(self.mag_coord[i,2],"03f"))
     str_atom_num=""
     for i in self.N[0]*self.N[1]*self.N[2]*np.asarray(self.n_unit):
-      str_atom_num += str(i)+" "
+      str_atom_num += str(self.n_unit[i])+" "
     print(str_atom_num)
     print("Cartesian") #self.coord_type
     for i in self.disl_atoms_pos_in:

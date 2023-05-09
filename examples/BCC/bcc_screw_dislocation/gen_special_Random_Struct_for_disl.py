@@ -106,17 +106,20 @@ class gen_disl():
     #    self.randStruct[1].append(self.atoms_pos[i]) 
   def print_random(self):
     self.gen_random()
-    print(self.sys_name), #remove "," later
-    print(self.latt_para)
+    print(self.sys_name,self.latt_para) #, #remove "," later
+    #print(self.latt_para)
     for i in range(0,3):
       print(format(self.coord[i,0],"03f"),"	",format(self.coord[i,1],"03f"),"	",\
             format(self.coord[i,2],"03f"))
     #for i in range(1,len(self.N)):
     #  print self.N[i], 
     #print self.N[0]-sum(self.N[1:len(self.N)])
-    for i in range(0,len(self.n_unit)-1):
-      print(self.n_unit[i]),
-    print(self.n_unit[len(self.n_unit)-1])
+    str_atom_num=""
+    for i in range(0,len(self.n_unit)):
+      str_atom_num += str(self.n_unit[i])+" "
+    print(str_atom_num)
+      #print(self.n_unit[i]),
+    #print(self.n_unit[len(self.n_unit)-1])
     if self.w_coord == 1:
       print("Cartesian") #self.coord_type
       for i in self.randStruct:

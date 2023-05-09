@@ -103,7 +103,7 @@ class gen_disl():
       wfile.write(str(format(new_coord[i][0],"03f"))+"	"+str(format(new_coord[i][1],"03f"))+"	"+\
             str(format(new_coord[i][2],"03f"))+'\n')
     for i in np.asarray(self.n_unit):
-      wfile.write(str(i)+" "),
+      wfile.write(str(self.n_unit[i])+" "),
     if int(self.GSFE_requirements[8])==1:
       wfile.write("\nSelective dynamics")
     if self.w_coord == 1:

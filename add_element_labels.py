@@ -53,10 +53,10 @@ class add_element_labels():
         if count==6:
           for i in ll:
             self.n_unit.append(int(i))
-        if 'Cartesian' in line:
+        if ('Cartesian' in line) or ('cartesian' in line):
            self.coord_type='Cartesian'
            break
-        if 'Direct' in line:       
+        if ('Direct' in line) or ('direct' in line):
            self.coord_type='Direct'
            break
         count +=1
